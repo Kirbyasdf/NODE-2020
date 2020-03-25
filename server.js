@@ -1,7 +1,10 @@
 require("dotenv").config({ path: "./config/.env" });
 const app = require("express")();
+const bootCampRouter = require("./routes/bootcamps.route.js");
 
 const PORT = process.env.PORT || 4000;
+
+app.use("/api/v1/bootcamps", bootCampRouter);
 
 app.listen(PORT, () =>
   console.log(
@@ -9,4 +12,9 @@ app.listen(PORT, () =>
   )
 );
 
-app.get("/", (req, res) => res.send("lol"));
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({ type: "error", message: err.message });
+});
+
+app.get("/", (req, res) => res.send("working"));
