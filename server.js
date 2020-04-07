@@ -1,20 +1,38 @@
 require("dotenv").config({ path: "./config/.env" });
+const colors = require("colors");
 const app = require("express")();
+// const logger = require("./middleware/logger.js");
+const morgan = require("morgan");
+const connectDB = require("./config/db.js");
+//import routes
 const bootCampRouter = require("./routes/bootcamps.route.js");
+//connect to DB
+connectDB();
+
+//Dev logging middleware
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 const PORT = process.env.PORT || 4000;
 
 app.use("/api/v1/bootcamps", bootCampRouter);
-
-app.listen(PORT, () =>
-  console.log(
-    `RUNNING ::: ${process.env.NODE_ENV} ::: - GOOD 2 GO on PORT: ` + PORT
-  )
-);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({ type: "error", message: err.message });
 });
 
-app.get("/", (req, res) => res.send("working"));
+const server = app.listen(PORT, () =>
+  console.log(
+    (`RUNNING ::: ${process.env.NODE_ENV} ::: - GOOD 2 GO on PORT: ` + PORT)
+      .yellow
+  )
+);
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err, promise) => {
+  console.error((`ERR: ` + err.message).red);
+  // Close server & exit process
+  server.close(() => process.exit(1)); //pass 1 to exit with failure
+});

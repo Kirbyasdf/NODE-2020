@@ -1,5 +1,5 @@
 // @desc       get all bootcamp
-// @routes     get /api/v1/bootcamps/
+// @routes     GET /api/v1/bootcamps/
 // @access     public
 
 getBootcamps = (req, res, next) => {
@@ -7,14 +7,14 @@ getBootcamps = (req, res, next) => {
 };
 
 // @desc       get 1 bootcamp
-// @routes     get /api/v1/bootcamps/
+// @routes     GET /api/v1/bootcamps/
 // @access     public
 getBootcamp = (req, res, next) => {
   res.status(200).json({ success: true, message: ` show ${req.params.id} ` });
 };
 
 // @desc       create bootcamp
-// @routes     PUT /api/v1/bootcamps/
+// @routes     POST /api/v1/bootcamps/
 // @access     private
 
 createBootcamps = (req, res, next) => {
@@ -42,5 +42,5 @@ module.exports = {
   getBootcamp,
   createBootcamps,
   updateBootcamps,
-  deleteBootcamp
+  deleteBootcamp,
 };
