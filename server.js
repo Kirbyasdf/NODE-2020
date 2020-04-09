@@ -2,6 +2,7 @@ require("dotenv").config({ path: "./config/.env" });
 const colors = require("colors");
 const express = require("express");
 // const logger = require("./middleware/logger.js");
+const errorHandler = require("./middleware/errorHandler.js");
 const morgan = require("morgan");
 const connectDB = require("./config/db.js");
 //import routes
@@ -21,7 +22,11 @@ if (process.env.NODE_ENV === "development") {
 
 const PORT = process.env.PORT || 4000;
 
+// Mount Routes
 app.use("/api/v1/bootcamps", bootCampRouter);
+
+// Middleware logging * MUST BE AFTER ALL RELEVENT routes
+app.use(errorHandler);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
