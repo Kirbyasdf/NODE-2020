@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
+const geocoder = require("../utilities/nodeGeocoder.js");
 
-const BootcampScheme = new mongoose.Schema({
+const BootcampSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "please add a name"], //put in array to get custom message
@@ -100,32 +102,39 @@ const BootcampScheme = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Bootcamp", BootcampScheme);
+//some notes ... use a function not an arrow function due to scope
+// running all of this before on save
+//console.log(this) for full keys
 
-// // Create bootcamp slug from the name
-// BootcampSchema.pre("save", function (next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+// Create slug from the name
 
-// // Geocode & create location field
-// BootcampSchema.pre("save", async function (next) {
-//   const loc = await geocoder.geocode(this.address);
-//   this.location = {
-//     type: "Point",
-//     coordinates: [loc[0].longitude, loc[0].latitude],
-//     formattedAddress: loc[0].formattedAddress,
-//     street: loc[0].streetName,
-//     city: loc[0].city,
-//     state: loc[0].stateCode,
-//     zipcode: loc[0].zipcode,
-//     country: loc[0].countryCode,
-//   };
+BootcampSchema.pre("save", function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
-//   // Do not save address in DB
-//   this.address = undefined;
-//   next();
-// });
+// Geocoder
+// https://github.com/nchaulet/node-geocoder
+
+BootcampSchema.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.address);
+  this.location = {
+    type: "Point",
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+    street: loc[0].streetName,
+    city: loc[0].city,
+    state: loc[0].stateCode,
+    zipcode: loc[0].zipcode,
+    country: loc[0].countryCode,
+  };
+
+  // The client already gives us an address so we do not want to save it
+  this.address = undefined;
+  next();
+});
+
+module.exports = mongoose.model("Bootcamp", BootcampSchema);
 
 // // Cascade delete courses when a bootcamp is deleted
 // BootcampSchema.pre("remove", async function (next) {
