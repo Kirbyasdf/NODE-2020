@@ -52,9 +52,6 @@ getBootcamps = asyncHandler(async (req, res, next) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const total = await Bootcamp.countDocuments();
-  console.log(page);
-  console.log("limit", limit);
-
   query = query.skip(startIndex).limit(limit);
 
   const bootcamps = await query;

@@ -6,7 +6,9 @@ const errorHandler = require("./middleware/errorHandler.js");
 const morgan = require("morgan");
 const connectDB = require("./config/db.js");
 //import routes
-const bootCampRouter = require("./routes/bootcamps.route.js");
+const bootCampRouter = require("./routes/bootcamps.routes.js");
+const courseRouter = require("./routes/courses.routes.js");
+
 //connect to DB
 const app = express();
 
@@ -24,6 +26,7 @@ const PORT = process.env.PORT || 4000;
 
 // Mount Routes
 app.use("/api/v1/bootcamps", bootCampRouter);
+app.use("/api/v1/courses", courseRouter);
 
 // Middleware logging * MUST BE AFTER ALL RELEVENT routes
 app.use(errorHandler);
