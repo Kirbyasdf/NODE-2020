@@ -4,9 +4,10 @@ const Course = require("../models/Course.js");
 
 getCourses = asyncHandler(async (req, res, next) => {
   let query;
+  console.log("params", req.params);
 
   if (req.params.bootcampId) {
-    query = Course.find({ bootcamp: req.prams.bootcampId });
+    query = Course.find({ bootcamp: req.params.bootcampId });
   } else {
     query = Course.find();
   }

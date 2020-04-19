@@ -10,8 +10,14 @@ const {
 
 const router = new Router();
 
+// re-route into courses w/ resource routing
+//must add {mergePrarms: true in imported router}
+const courseRouter = require("./courses.routes.js");
+
+router.use("/:bootcampId/courses", courseRouter);
+
 router.route("/").get(getBootcamps).post(createBootcamps);
-//
+
 router
   .route("/:id")
   .get(getBootcamp)
