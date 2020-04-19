@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV.production node server.js",
-    "del-db": "node seeder.js -d",
-    "import-db": "node seeder.js -i",
+    "reset-db": "node seeder.js -d && node seeder.js -i",
     "dev": "nodemon server.js"
   },
   "keywords": [],

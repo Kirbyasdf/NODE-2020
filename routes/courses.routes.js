@@ -1,8 +1,15 @@
 const { Router } = require("express");
-const { getCourses } = require("../controllers/courses.controller.js");
+const {
+  getCourses,
+  getCourse,
+  addCourse,
+  updateCourse,
+  deleteCourse,
+} = require("../controllers/courses.controller.js");
 
 const router = new Router({ mergeParams: true });
 
-router.route("/").get(getCourses);
+router.route("/").get(getCourses).post(addCourse);
+router.route("/:id").get(getCourse).patch(updateCourse).delete(deleteCourse);
 
 module.exports = router;

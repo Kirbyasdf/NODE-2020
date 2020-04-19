@@ -27,10 +27,11 @@ const importData = async () => {
     console.log("Importing data");
     await Bootcamp.create(bootcamps);
     await Course.create(courses);
+
     console.log("Data Imported....".green.inverse);
     process.exit();
   } catch (err) {
-    console.error(Err);
+    console.error(err);
   }
 };
 
@@ -40,11 +41,11 @@ const deleteData = async () => {
   try {
     console.log("Deleting data");
     await Bootcamp.deleteMany();
-    await Course.deleteMany;
+    await Course.deleteMany();
     console.log("Data Destroyed....".red.inverse);
     process.exit();
   } catch (err) {
-    console.error(Err);
+    console.error(err);
   }
 };
 

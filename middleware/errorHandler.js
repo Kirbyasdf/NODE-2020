@@ -4,9 +4,9 @@ const errorHandler = (err, req, res, next) => {
   //copying err being passed through
   let error = { ...err };
   error.message = err.message;
-  console.log(err.code);
+  console.log(err.code.green.inverse);
   //log to console for dev
-  console.log(err.stack.cyan);
+  console.log(err.stack.red.inverse);
 
   // Mongoose incorrect formed for Object ID()
   if (err.name === "CastError") {
