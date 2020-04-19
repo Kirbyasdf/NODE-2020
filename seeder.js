@@ -42,7 +42,7 @@ const deleteData = async () => {
   }
 };
 
-// basic agrument scripting
+// basic agrument scripting ex <node seeder.js -i> will  run importData
 if (process.argv[2] === "-i") {
   importData();
 } else if (process.argv[2] === "-d") {

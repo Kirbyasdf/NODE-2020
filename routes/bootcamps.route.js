@@ -4,21 +4,21 @@ const {
   getBootcamp,
   createBootcamps,
   updateBootcamps,
-  deleteBootcamp
-} = require("../controllers/bootCamps.controller.js");
+  deleteBootcamp,
+  getBootcampsInRadius,
+} = require("../controllers/bootcamps.controller.js");
 
 const router = new Router();
 
-router
-  .route("/")
-  .get(getBootcamps)
-  .post(createBootcamps);
+router.route("/").get(getBootcamps).post(createBootcamps);
 //
 router
   .route("/:id")
   .get(getBootcamp)
   .patch(updateBootcamps)
   .delete(deleteBootcamp);
+
+router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
 //alt way to write the above
 
