@@ -26,7 +26,7 @@ getBootcamps = asyncHandler(async (req, res, next) => {
   );
   // greater than, greater than or equal and return the match where// double $$ is just string interp.
 
-  query = Bootcamp.find(JSON.parse(queryString));
+  query = Bootcamp.find(JSON.parse(queryString)).populate("courses");
 
   //utilize the select field in mongo
 
@@ -128,10 +128,12 @@ updateBootcamps = asyncHandler(async (req, res, next) => {
 
 deleteBootcamp = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const bootcamp = await Bootcamp.findByIdAndDelete(id);
+  const bootcamp = await Bootcamp.findById(id);
   if (!bootcamp) {
     return next(new ErrorResponse(`No Bootcamp with id: ${id}`, 404));
   }
+  //findByIdAndDelete will not trigger middleware to cascade delete the courses.. must change to .findbyid then.remove()
+  bootcamp.remove();
   res.status(200).json({
     success: true,
     message: `Bootcamp: "${bootcamp.name}" was deleted id: ${bootcamp._id}`,
