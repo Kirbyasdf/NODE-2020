@@ -1,3 +1,4 @@
+const path = require("path");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const ErrorResponse = require("../utilities/ErrorResponse.js");
 const geocoder = require("../utilities/nodeGeocoder.js");
@@ -121,7 +122,7 @@ updateBootcamps = asyncHandler(async (req, res, next) => {
   res.status(201).json({ success: true, data: bootcamp });
 });
 
-// @desc       update bootcamp
+// @desc       delete bootcamp
 // @routes     DEL /api/v1/bootcamps/:id
 // @access     private
 
@@ -159,6 +160,47 @@ getBootcampsInRadius = asyncHandler(async (req, res, next) => {
     .json({ success: true, count: bootcamps.length, data: bootcamps });
 });
 
+// @desc       upload photo for bootcamp
+// @routes     DEL /api/v1/bootcamps/:id/photo
+// @access     private
+
+bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const bootcamp = await Bootcamp.findById(id);
+  if (!bootcamp) {
+    return next(new ErrorResponse(`No Bootcamp with id: ${id}`, 404));
+  }
+  if (!req.files) {
+    return next(new ErrorResponse("Please upload a photo", 400));
+  }
+
+  if (!req.files.file.mimetype.startsWith("image")) {
+    return next(new ErrorResponse("Please upload correct image format", 400));
+  }
+
+  if (req.files.file.size > process.env.MAX_FILE_UPLOAD_SIZE) {
+    return next(
+      new ErrorResponse(
+        "Please up load a file smaller than " +
+          process.env.MAX_FILE_UPLOAD_SIZE,
+        400
+      )
+    );
+  }
+  //the key file is attached from the request as the key
+  const file = req.files.file;
+  //create custom filename using the default node module
+  file.name = `photo_${bootcamp._id}` + path.parse(file.name).ext;
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+    if (err) {
+      console.error(error);
+      return next(new ErrorResponse("Upload failed", 500));
+    }
+    await Bootcamp.findByIdAndUpdate(id, { photo: file.name });
+    res.status(200).json({ sucess: true, data: file.name });
+  });
+});
+
 module.exports = {
   getBootcamps,
   getBootcamp,
@@ -166,4 +208,5 @@ module.exports = {
   updateBootcamps,
   deleteBootcamp,
   getBootcampsInRadius,
+  bootcampPhotoUpload,
 };

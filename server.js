@@ -1,11 +1,12 @@
 require("dotenv").config({ path: "./config/.env" });
+const path = require("path");
 const colors = require("colors");
 const express = require("express");
+const fileupload = require("express-fileupload");
 // const logger = require("./middleware/logger.js");
 const errorHandler = require("./middleware/errorHandler.js");
 const morgan = require("morgan");
 const connectDB = require("./config/db.js");
-//import routes
 const bootCampRouter = require("./routes/bootcamps.routes.js");
 const courseRouter = require("./routes/courses.routes.js");
 
@@ -21,6 +22,13 @@ app.use(express.json());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+// File uploading
+app.use(fileupload());
+
+// set static folder
+
+app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 4000;
 
