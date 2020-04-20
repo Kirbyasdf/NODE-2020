@@ -89,7 +89,6 @@ getBootcamps = asyncHandler(async (req, res, next) => {
 getBootcamp = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const bootcamp = await Bootcamp.findById(id);
-  console.log(bootcamp);
   if (!bootcamp) {
     return next(new ErrorResponse(`No Bootcamp with id: ${id}`, 404));
   }
