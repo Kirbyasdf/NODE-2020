@@ -13,10 +13,7 @@ register = asyncHandler(async (req, res, next) => {
     role,
   });
 
-  //create Token with method defined in user model
-  const token = user.getSignedJwtToken();
-
-  res.status(200).json({ success: true, token });
+  sendTokenResponse(user, 200, res);
 });
 
 login = asyncHandler(async (req, res, next) => {
@@ -40,10 +37,36 @@ login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Invalid Login", 401));
   }
 
-  //create Token with method defined in user model
-  const token = user.getSignedJwtToken();
-
-  res.status(200).json({ success: true, token });
+  sendTokenResponse(user, 200, res);
 });
 
-module.exports = { register, login };
+//get token from model,
+
+const sendTokenResponse = (user, statusCode, res) => {
+  const token = user.getSignedJwtToken();
+
+  const options = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnky: true,
+  };
+  if (process.env.NODE_ENV === "production") {
+    options.secure = true;
+  }
+
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({ sucess: true, token });
+};
+
+getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  res.status(200).json({
+    sucess: true,
+    data: user,
+  });
+});
+
+module.exports = { register, login, getMe };

@@ -6,6 +6,7 @@ const fileupload = require("express-fileupload");
 // const logger = require("./middleware/logger.js");
 const errorHandler = require("./middleware/errorHandler.js");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db.js");
 const bootCampRouter = require("./routes/bootcamps.routes.js");
 const courseRouter = require("./routes/courses.routes.js");
@@ -19,11 +20,13 @@ connectDB();
 // Body Parser
 app.use(express.json());
 
+// cookies
+app.use(cookieParser());
+
 //Dev logging middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
 // File uploading
 app.use(fileupload());
 

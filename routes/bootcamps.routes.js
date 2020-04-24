@@ -19,21 +19,25 @@ const courseRouter = require("./courses.routes.js");
 
 const router = new Router();
 
+const { protect, authorize } = require("../middleware/auth.js");
+
 router.use("/:bootcampId/courses", courseRouter);
 
 router
   .route("/")
   .get(advancedResults(Bootcamp, "courses"), getBootcamps)
-  .post(createBootcamps);
+  .post(protect, authorize("publisher", "admin"), createBootcamps);
 
 router
   .route("/:id")
   .get(getBootcamp)
-  .patch(updateBootcamps)
-  .delete(deleteBootcamp);
+  .patch(protect, authorize("publisher", "admin"), updateBootcamps)
+  .delete(protect, authorize("publisher", "admin"), deleteBootcamp);
 
 router.route("/radius/:zipcode/:distance").get(getBootcampsInRadius);
 
-router.route("/:id/photo").patch(bootcampPhotoUpload);
+router
+  .route("/:id/photo")
+  .patch(protect, authorize("publisher", "admin"), bootcampPhotoUpload);
 
 module.exports = router;

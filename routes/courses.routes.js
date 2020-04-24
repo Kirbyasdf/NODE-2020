@@ -13,6 +13,8 @@ const advancedResults = require("../middleware/advancedResults.js");
 
 const router = new Router({ mergeParams: true });
 
+const { protect, authorize } = require("../middleware/auth.js");
+
 router
   .route("/")
   .get(
@@ -22,7 +24,11 @@ router
     }),
     getCourses
   )
-  .post(addCourse);
-router.route("/:id").get(getCourse).patch(updateCourse).delete(deleteCourse);
+  .post(protect, authorize("publisher", "admin"), addCourse);
+router
+  .route("/:id")
+  .get(getCourse)
+  .patch(protect, authorize("publisher", "admin"), updateCourse)
+  .delete(protect, authorize("publisher", "admin"), deleteCourse);
 
 module.exports = router;
