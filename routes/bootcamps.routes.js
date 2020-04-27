@@ -14,6 +14,7 @@ const Bootcamp = require("../models/Bootcamp.js");
 // re-route into courses w/ resource routing
 //must add {mergePrarms: true in imported router}
 const courseRouter = require("./courses.routes.js");
+const reviewRouter = require("./reviews.routes.js");
 // pass middleware to route w/model(below) + controller func
 const advancedResults = require("../middleware/advancedResults.js");
 
@@ -22,6 +23,7 @@ const router = new Router();
 const { protect, authorize } = require("../middleware/auth.js");
 
 router.use("/:bootcampId/courses", courseRouter);
+router.use("/:bootcampId/reviews", reviewRouter);
 
 router
   .route("/")

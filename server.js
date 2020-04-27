@@ -12,6 +12,7 @@ const bootCampRouter = require("./routes/bootcamps.routes.js");
 const courseRouter = require("./routes/courses.routes.js");
 const authRouter = require("./routes/auth.routes.js");
 const userRouter = require("./routes/users.routes.js");
+const reviewRouter = require("./routes/reviews.routes.js");
 
 //connect to DB
 const app = express();
@@ -42,6 +43,7 @@ app.use("/api/v1/bootcamps", bootCampRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 // Middleware logging * MUST BE AFTER ALL RELEVENT routes
 app.use(errorHandler);

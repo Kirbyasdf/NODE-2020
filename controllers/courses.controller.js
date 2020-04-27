@@ -4,8 +4,6 @@ const Course = require("../models/Course.js");
 const Bootcamp = require("../models/Bootcamp.js");
 
 getCourses = asyncHandler(async (req, res, next) => {
-  let query;
-
   if (req.params.bootcampId) {
     const courses = await Course.find({ bootcamp: req.params.bootcampId });
     return res

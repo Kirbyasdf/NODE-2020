@@ -124,6 +124,7 @@ updatePassword = asyncHandler(async (req, res, next) => {
   if (!(await user.matchPassword(req.body.currentPassword))) {
     return next(new ErrorResponse("password is invalid", 401));
   }
+  console.log();
   user.password = req.body.newPassword;
   await user.save();
   delete user.password;
