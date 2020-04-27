@@ -22,7 +22,9 @@ protect = asyncHandler(async (req, res, next) => {
 
   // Make sure token exists
   if (!token) {
-    return next(new ErrorResponse("Not Authorized for route use", 401));
+    return next(
+      new ErrorResponse("Not Authorized for route use :no token ", 401)
+    );
   }
 
   //verify token
@@ -32,18 +34,19 @@ protect = asyncHandler(async (req, res, next) => {
     req.user = await User.findById(decoded.id);
     next();
   } catch (err) {
-    return next(new ErrorResponse("Not Authorized for route use", 401));
+    return next(
+      new ErrorResponse("Not Authorized for route use token not match", 401)
+    );
   }
 });
 
 /// grant access to certain roles
 authorize = (...roles) => {
-  console.log(roles);
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
         new ErrorResponse(
-          `role: ${req.user.role} is not authorize for this route`,
+          `role: ${req.user.role} is not authorize for this route role does not include admin/publisher`,
           403
         )
       );

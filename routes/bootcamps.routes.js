@@ -9,13 +9,13 @@ const {
   bootcampPhotoUpload,
 } = require("../controllers/bootcamps.controller.js");
 
-// pass middleware to route w/model(below) + controller func
-const advancedResults = require("../middleware/advancedResults.js");
 const Bootcamp = require("../models/Bootcamp.js");
 
 // re-route into courses w/ resource routing
 //must add {mergePrarms: true in imported router}
 const courseRouter = require("./courses.routes.js");
+// pass middleware to route w/model(below) + controller func
+const advancedResults = require("../middleware/advancedResults.js");
 
 const router = new Router();
 

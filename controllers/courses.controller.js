@@ -36,12 +36,21 @@ getCourse = asyncHandler(async (req, res, next) => {
 addCourse = asyncHandler(async (req, res, next) => {
   //setting the object to be saved to the correct id
   req.body.bootcamp = req.params.bootcampId;
-
+  req.body.user = req.user.id;
   const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
   if (!bootcamp) {
     return next(
       new ErrorResponse("No Bootcamp with id of " + req.params.bootcampId, 404)
+    );
+  }
+
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} not authorized to add a course to ${bootcamp._id}`,
+        401
+      )
     );
   }
 
@@ -61,8 +70,19 @@ updateCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(new ErrorResponse("No Course with id of " + id, 404));
   }
-  //this await is not working.. the db is upated but the returned course is not updated...??
-  course = await Course.findByIdAndUpdate(id, req.body);
+
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(
+        `User: ${req.user.id} not authorized to update a course: ${course._id}`,
+        401
+      )
+    );
+  }
+  course = await Course.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
   res.status(200).json({
     sucess: true,
     data: course,
@@ -76,6 +96,15 @@ deleteCourse = asyncHandler(async (req, res, next) => {
 
   if (!course) {
     return next(new ErrorResponse("No Course with id of " + id, 404));
+  }
+
+  if (course.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(
+        `User: ${req.user.id} not authorized to update a course: ${course._id}`,
+        401
+      )
+    );
   }
 
   await course.remove();
