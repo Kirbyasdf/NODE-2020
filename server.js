@@ -14,7 +14,7 @@ const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
-const bootCampRouter = require("./routes/bootcamps.routes.js");
+const bootcampRouter = require("./routes/bootcamps.routes.js");
 const courseRouter = require("./routes/courses.routes.js");
 const authRouter = require("./routes/auth.routes.js");
 const userRouter = require("./routes/users.routes.js");
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 4000;
 
 // Mount Routes
-app.use("/api/v1/bootcamps", bootCampRouter);
+app.use("/api/v1/bootcamps", bootcampRouter);
 app.use("/api/v1/courses", courseRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
