@@ -7,6 +7,7 @@ const {
   resetPassword,
   updateDetails,
   updatePassword,
+  logout,
 } = require("../controllers/auth.controller.js");
 
 const router = new Router();
@@ -15,6 +16,7 @@ const { protect } = require("../middleware/auth.js");
 
 router.post("/register", register);
 router.post("/login", login);
+router.get("/logout", logout);
 router.get("/me", protect, getMe);
 router.get("/forgotpassword", forgotPassword);
 router.put("/resetpassword/:resetToken", resetPassword);

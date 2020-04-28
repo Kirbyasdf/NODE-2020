@@ -42,6 +42,18 @@ login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
+logout = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 5 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    sucess: true,
+    data: "logged out",
+  });
+});
+
 getMe = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({
@@ -134,11 +146,13 @@ updatePassword = asyncHandler(async (req, res, next) => {
 module.exports = {
   register,
   login,
+  logout,
   getMe,
   forgotPassword,
   resetPassword,
   updateDetails,
   updatePassword,
+  logout,
 };
 
 //get token from model,
