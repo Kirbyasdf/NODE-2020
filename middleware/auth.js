@@ -3,7 +3,7 @@ const asyncHandler = require("./asyncHandler.js");
 const ErrorResponse = require("../utilities/ErrorResponse.js");
 const User = require("../models/User.js");
 
-// project routes
+// protect routes
 
 protect = asyncHandler(async (req, res, next) => {
   let token;
